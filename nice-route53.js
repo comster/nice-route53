@@ -394,6 +394,11 @@ Route53.prototype.setRecord = function(opts, pollEvery, callback) {
                             Value: r
                         }
                     });
+        } else if (opts.alias) {
+            delete change.ResourceRecordSet.TTL;
+            change
+                .ResourceRecordSet
+                    .AliasTarget = opts.alias;
         }
         args.ChangeBatch.Changes.push(change);
 
