@@ -37,6 +37,10 @@ function addTrailingDotToDomain(domain) {
     return domain + '.';
 }
 
+function decodeAsterisk(str) {
+    return str.replace("\\052", "*");
+}
+
 function convertListHostedZonesResponse(response) {
     // the list to return
     var zones = [];
@@ -359,7 +363,7 @@ Route53.prototype.setRecord = function(opts, pollEvery, callback) {
         // loop through the records finding the one we want (if any)
         var newRecord;
         records.forEach(function(record) {
-            if ( opts.name === addTrailingDotToDomain(record.name) && opts.type === record.type ) {
+            if ( decodeAsterisk(opts.name) === addTrailingDotToDomain(decodeAsterisk(record.name)) && opts.type === record.type ) {
                 args.ChangeBatch.Changes.push({
                     Action : 'DELETE',
                     ResourceRecordSet: {
